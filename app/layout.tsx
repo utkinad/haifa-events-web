@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Nunito } from "next/font/google";
+import PinGate from "./components/PinGate";
 import "./globals.css";
 
 const inter = Inter({
@@ -41,7 +42,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className="min-h-screen bg-white text-gray-900 antialiased font-[var(--font-inter)]">
-        {children}
+        <PinGate>{children}</PinGate>
       </body>
     </html>
   );
