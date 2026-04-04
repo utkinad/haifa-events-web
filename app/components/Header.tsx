@@ -5,10 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const NAV_LINKS = [
-  { label: "Афиша",         href: "/" },
-  { label: "Организаторам", href: "#" },
-  { label: "Для бизнеса",   href: "#" },
-  { label: "О проекте",     href: "#" },
+  { label: "Афиша",            href: "/" },
+  { label: "Создать событие",  href: "#coming-soon" },
 ];
 
 export default function Header() {
@@ -56,6 +54,14 @@ export default function Header() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          {/* Sign in */}
+          <a
+            href="#coming-soon"
+            className="hidden sm:inline-flex items-center text-xs font-medium px-4 py-1.5 rounded-full bg-[#1A1A2E] text-white hover:bg-[#2d2d4e] transition-all whitespace-nowrap"
+          >
+            Войти
+          </a>
+
           {/* Partnership CTA */}
           <a
             href="mailto:info@haifa.events?subject=Сотрудничество"
@@ -97,6 +103,13 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+          <a
+            href="#coming-soon"
+            className="text-sm font-semibold text-[#1A1A2E] py-1"
+            onClick={() => setMenuOpen(false)}
+          >
+            Войти
+          </a>
           <div className="flex gap-2 pt-2 border-t border-gray-100">
             <button className="px-3 py-1 rounded-md bg-[#1A1A2E] text-white text-xs font-medium">HE</button>
             <button className="px-3 py-1 rounded-md text-gray-500 border text-xs font-medium">RU</button>
