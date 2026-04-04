@@ -39,36 +39,30 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {NAV_LINKS.map((link) => (
+        {/* Right side — all together */}
+        <div className="flex items-center gap-5">
+
+          {/* Nav links */}
+          <nav className="hidden md:flex items-center gap-5">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-gray-500 hover:text-[#1A1A2E] transition-colors font-medium whitespace-nowrap"
+              >
+                {link.label}
+              </a>
+            ))}
             <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-gray-500 hover:text-[#1A1A2E] transition-colors font-medium"
+              href="mailto:info@haifa.events?subject=Сотрудничество"
+              className="text-sm text-gray-500 hover:text-[#1A1A2E] transition-colors font-medium whitespace-nowrap"
             >
-              {link.label}
+              Сотрудничество
             </a>
-          ))}
-        </nav>
+          </nav>
 
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          {/* Sign in */}
-          <a
-            href="#coming-soon"
-            className="hidden sm:inline-flex items-center text-xs font-medium px-4 py-1.5 rounded-full bg-[#1A1A2E] text-white hover:bg-[#2d2d4e] transition-all whitespace-nowrap"
-          >
-            Войти
-          </a>
-
-          {/* Partnership CTA */}
-          <a
-            href="mailto:info@haifa.events?subject=Сотрудничество"
-            className="hidden sm:inline-flex items-center text-xs font-medium px-4 py-1.5 rounded-full border border-[#31CDCF]/60 text-[#31CDCF] hover:border-[#31CDCF] hover:bg-[#31CDCF]/8 transition-all whitespace-nowrap tracking-wide"
-          >
-            Сотрудничество
-          </a>
+          {/* Divider */}
+          <div className="hidden md:block w-px h-4 bg-gray-200" />
 
           {/* Language switcher */}
           <div className="hidden sm:flex items-center gap-1 text-xs font-medium">
@@ -76,6 +70,14 @@ export default function Header() {
             <button className="px-2 py-1 rounded-md text-gray-500 hover:bg-gray-100">RU</button>
             <button className="px-2 py-1 rounded-md text-gray-500 hover:bg-gray-100">EN</button>
           </div>
+
+          {/* Sign in — primary action */}
+          <a
+            href="#coming-soon"
+            className="hidden sm:inline-flex items-center text-sm font-medium px-4 py-1.5 rounded-full bg-[#1A1A2E] text-white hover:bg-[#2d2d4e] transition-all whitespace-nowrap"
+          >
+            Войти
+          </a>
 
           {/* Mobile menu button */}
           <button
