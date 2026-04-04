@@ -87,7 +87,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
           className={`bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm ${shake ? "animate-[shake_0.5s_ease]" : ""}`}
         >
           <p className="text-white/60 text-sm text-center mb-6">
-            Сайт в разработке — доступ по PIN
+            Site under construction — access by PIN
           </p>
 
           <input
@@ -95,7 +95,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
             inputMode="numeric"
             value={pin}
             onChange={(e) => setPin(e.target.value)}
-            placeholder="Введите PIN"
+            placeholder="Enter PIN"
             autoFocus
             className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3 text-white text-center text-lg tracking-widest placeholder-white/30 focus:outline-none focus:border-[#31CDCF]/60 mb-4"
           />
@@ -104,7 +104,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
             type="submit"
             className="w-full bg-[#31CDCF] hover:bg-[#28b5b7] text-[#1A1A2E] font-bold py-3 rounded-xl transition-colors"
           >
-            Войти
+            Enter
           </button>
         </form>
       </div>
