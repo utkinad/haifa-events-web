@@ -66,9 +66,9 @@ export default function Header() {
 
           {/* Language switcher */}
           <div className="hidden sm:flex items-center gap-1 text-xs font-medium">
-            <button className="px-2 py-1 rounded-md bg-[#1A1A2E] text-white">HE</button>
-            <button className="px-2 py-1 rounded-md text-gray-500 hover:bg-gray-100">RU</button>
-            <button className="px-2 py-1 rounded-md text-gray-500 hover:bg-gray-100">EN</button>
+            <button className="px-2 py-1 rounded-md text-[#1A1A2E] font-semibold">HE</button>
+            <button className="px-2 py-1 rounded-md text-gray-400 hover:text-gray-700">RU</button>
+            <button className="px-2 py-1 rounded-md text-gray-400 hover:text-gray-700">EN</button>
           </div>
 
           {/* Sign in — primary action */}
@@ -113,9 +113,9 @@ export default function Header() {
             Войти
           </a>
           <div className="flex gap-2 pt-2 border-t border-gray-100">
-            <button className="px-3 py-1 rounded-md bg-[#1A1A2E] text-white text-xs font-medium">HE</button>
-            <button className="px-3 py-1 rounded-md text-gray-500 border text-xs font-medium">RU</button>
-            <button className="px-3 py-1 rounded-md text-gray-500 border text-xs font-medium">EN</button>
+            <button className="px-3 py-1 rounded-md text-[#1A1A2E] font-semibold text-xs">HE</button>
+            <button className="px-3 py-1 rounded-md text-gray-400 text-xs">RU</button>
+            <button className="px-3 py-1 rounded-md text-gray-400 text-xs">EN</button>
           </div>
         </div>
       )}
