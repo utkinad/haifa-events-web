@@ -36,7 +36,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
   const [shake, setShake]       = useState(false);
 
   useEffect(() => {
-    if (getCookie("ea_v1") === "granted") setUnlocked(true);
+    if (getCookie("ea_v2") === "granted") setUnlocked(true);
     setChecking(false);
   }, []);
 
@@ -44,7 +44,7 @@ export default function PinGate({ children }: { children: React.ReactNode }) {
     e.preventDefault();
     const hash = await sha256(pin);
     if (hash === PIN_HASH) {
-      setCookie("ea_v1", "granted", 30);
+      setCookie("ea_v2", "granted", 30);
       setUnlocked(true);
     } else {
       setShake(true);
