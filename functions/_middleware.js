@@ -1,10 +1,13 @@
 /**
  * Cloudflare Pages Middleware — Early Access PIN Gate
  *
- * Configure the PIN in Cloudflare Pages → Settings → Environment Variables:
+ * Unauthenticated → Coming Soon page with PIN input (gate page)
+ * Authenticated   → next() → the real site (index.html)
+ *
+ * Configure PIN in Cloudflare Pages → Settings → Environment Variables:
  *   EARLY_ACCESS_PIN = your 6-digit PIN
  *
- * Default fallback: 240426 (change it!)
+ * Default fallback: 240426
  */
 
 const COOKIE_NAME = "ea_v1";
@@ -14,18 +17,18 @@ export async function onRequest(context) {
   const { request, next, env } = context;
   const url = new URL(request.url);
 
-  // Handle PIN submission
+  // Handle PIN form submission
   if (url.pathname === "/api/pin-check" && request.method === "POST") {
     return handlePinCheck(request, env);
   }
 
-  // Pass through if already authenticated
+  // Authenticated — serve the real site
   if (isAuthenticated(request)) {
     return next();
   }
 
-  // Block and show PIN page
-  return pinPage(false);
+  // Not authenticated — show Coming Soon + PIN gate
+  return gatePage(false);
 }
 
 // ─── PIN check handler ────────────────────────────────────────────────────────
@@ -38,7 +41,7 @@ async function handlePinCheck(request, env) {
     const form = await request.formData();
     pin = (form.get("pin") || "").trim();
   } catch {
-    return pinPage(true);
+    return gatePage(true);
   }
 
   if (pin === VALID_PIN) {
@@ -51,7 +54,7 @@ async function handlePinCheck(request, env) {
     });
   }
 
-  return pinPage(true);
+  return gatePage(true);
 }
 
 // ─── Cookie helper ────────────────────────────────────────────────────────────
@@ -65,15 +68,21 @@ function isAuthenticated(request) {
   return false;
 }
 
-// ─── PIN page HTML ────────────────────────────────────────────────────────────
+// ─── Gate page = Coming Soon + PIN input ──────────────────────────────────────
 
-function pinPage(hasError) {
+function gatePage(hasError) {
   const html = `<!DOCTYPE html>
 <html lang="en" style="height:100%">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Haifa Events — Early Access</title>
+  <title>Haifa Events — Coming Soon</title>
+  <meta name="description" content="Events in Haifa — concerts, culture, food &amp; more" />
+  <meta property="og:title" content="haifa.events" />
+  <meta property="og:description" content="Everything happening in Haifa — in one place" />
+  <meta property="og:image" content="https://haifa.events/og-image.png" />
+  <meta property="og:url" content="https://haifa.events" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="robots" content="noindex,nofollow" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -85,76 +94,157 @@ function pinPage(hasError) {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
+    html, body { height: 100%; }
+
+    body {
       font-family: 'Sora', sans-serif;
       background: #ffffff;
       color: #111111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    body {
-      min-height: 100vh;
+    main {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-    }
-
-    .wrap {
+      padding: 0 24px;
       text-align: center;
-      width: 100%;
-      max-width: 340px;
     }
 
-    /* Logo — same as main site */
     .logo {
-      margin-bottom: 56px;
+      margin-bottom: 64px;
       user-select: none;
     }
     .logo-haifa {
       display: block;
       font-weight: 300;
-      font-size: clamp(12px, 2.5vw, 18px);
-      letter-spacing: 0.18em;
+      font-size: clamp(14px, 2.5vw, 22px);
+      letter-spacing: 0.15em;
       color: #111;
-      margin-bottom: 3px;
-      text-transform: uppercase;
+      margin-bottom: 4px;
     }
     .logo-events {
       display: block;
       font-weight: 700;
-      font-size: clamp(20px, 4vw, 32px);
-      letter-spacing: 0.06em;
+      font-size: clamp(22px, 4vw, 38px);
+      letter-spacing: 0.04em;
       color: #111;
       line-height: 1;
+    }
+
+    .coming-soon {
+      font-weight: 300;
+      font-size: clamp(28px, 5vw, 52px);
+      letter-spacing: 0.18em;
+      color: #111;
       text-transform: uppercase;
     }
 
-    /* Badge */
-    .badge {
-      display: inline-block;
+    .tagline {
       font-weight: 300;
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: #999;
-      text-transform: uppercase;
+      font-size: clamp(13px, 1.5vw, 16px);
+      letter-spacing: 0.08em;
+      color: #888;
+      margin-top: 20px;
       margin-bottom: 40px;
     }
 
-    /* PIN input */
+    /* Telegram button */
+    .tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 26px;
+      background: transparent;
+      color: #111;
+      font-family: 'Sora', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      border: 1px solid #ccc;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: border-color .25s, color .25s, box-shadow .25s;
+    }
+    .tg-btn:hover {
+      border-color: #111;
+      box-shadow: 0 2px 16px rgba(0,0,0,.07);
+    }
+    .tg-btn svg { flex-shrink: 0; opacity: .7; }
+
+    /* Language picker */
+    .lang-picker {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      margin-top: 14px;
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .lang-picker.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .lang-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border: 1px solid #e5e5e5;
+      border-radius: 100px;
+      text-decoration: none;
+      font-family: 'Sora', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: #333;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s, color .2s;
+      white-space: nowrap;
+    }
+    .lang-link:hover {
+      border-color: #111;
+      color: #111;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+
+    /* ── Early Access PIN section ── */
+    .divider {
+      width: 32px;
+      height: 1px;
+      background: #e8e8e8;
+      margin: 44px auto 40px;
+    }
+
+    .ea-label {
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      color: #bbb;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
     .pin-input {
       display: block;
-      width: 100%;
-      padding: 16px 20px;
+      width: 180px;
+      margin: 0 auto;
+      padding: 11px 16px;
       font-family: 'Sora', sans-serif;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 300;
-      letter-spacing: 14px;
+      letter-spacing: 12px;
       text-align: center;
       background: #fff;
       border: 1px solid ${hasError ? "#e5533d" : "#ddd"};
-      border-radius: 12px;
+      border-radius: 100px;
       color: #111;
       outline: none;
       transition: border-color 0.2s;
@@ -167,62 +257,61 @@ function pinPage(hasError) {
 
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      20%       { transform: translateX(-6px); }
-      40%       { transform: translateX(6px); }
-      60%       { transform: translateX(-4px); }
-      80%       { transform: translateX(4px); }
+      20%       { transform: translateX(-5px); }
+      40%       { transform: translateX(5px); }
+      60%       { transform: translateX(-3px); }
+      80%       { transform: translateX(3px); }
     }
 
-    .error-msg {
-      font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 0.05em;
+    .pin-error {
+      font-size: 11px;
+      letter-spacing: 0.06em;
       color: #e5533d;
       margin-top: 10px;
-      height: 16px;
-    }
-
-    /* Submit button */
-    .btn {
-      display: block;
-      width: 100%;
-      margin-top: 20px;
-      padding: 14px 20px;
-      font-family: 'Sora', sans-serif;
-      font-size: 13px;
-      font-weight: 300;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #111;
-      background: transparent;
-      border: 1px solid #ccc;
-      border-radius: 100px;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .btn:hover {
-      border-color: #111;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+      height: 14px;
     }
 
     footer {
-      margin-top: 64px;
+      position: fixed;
+      bottom: 24px;
+      left: 0;
+      right: 0;
       font-weight: 300;
       font-size: 11px;
-      letter-spacing: 0.12em;
-      color: #ccc;
+      letter-spacing: 0.05em;
+      color: #bbb;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+
+  <main>
     <div class="logo">
-      <span class="logo-haifa">Haifa</span>
-      <span class="logo-events">Events</span>
+      <span class="logo-haifa">haifa</span>
+      <span class="logo-events">events</span>
     </div>
 
-    <div class="badge">Early Access</div>
+    <h1 class="coming-soon">Coming Soon</h1>
 
+    <p class="tagline">Events in Haifa — concerts, culture, food &amp; more</p>
+
+    <button class="tg-btn" onclick="document.getElementById('langs').classList.toggle('open')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.68 7.92c-.12.56-.44.7-.9.44l-2.5-1.84-1.2 1.16c-.13.13-.25.25-.5.25l.18-2.52 4.6-4.16c.2-.18-.04-.28-.3-.1L8.12 14.4 5.66 13.6c-.56-.18-.57-.56.12-.82l8.96-3.46c.47-.17.88.1.9.48z" fill="white"/>
+      </svg>
+      Join on Telegram
+    </button>
+
+    <div class="lang-picker" id="langs">
+      <a class="lang-link" href="https://t.me/haifaevents_he" target="_blank" rel="noopener">🇮🇱 עברית</a>
+      <a class="lang-link" href="https://t.me/haifaevents_ru" target="_blank" rel="noopener">🇷🇺 Русский</a>
+      <a class="lang-link" href="https://t.me/haifaevents_en" target="_blank" rel="noopener">🇺🇸 English</a>
+    </div>
+
+    <!-- Early Access PIN -->
+    <div class="divider"></div>
+    <p class="ea-label">Early Access</p>
     <form method="POST" action="/api/pin-check" id="pinForm">
       <input
         type="password"
@@ -233,23 +322,22 @@ function pinPage(hasError) {
         placeholder="······"
         autocomplete="off"
         inputmode="numeric"
-        autofocus
       />
-      <div class="error-msg">${hasError ? "Incorrect PIN — try again" : ""}</div>
-      <button type="submit" class="btn">Enter →</button>
     </form>
+    <p class="pin-error">${hasError ? "Incorrect PIN" : ""}</p>
 
-    <footer>haifa.events</footer>
-  </div>
+  </main>
+
+  <footer>© 2026 Haifa Events. All rights reserved.</footer>
 
   <script>
-    // Auto-submit when 6 digits entered
     document.getElementById('pinInput').addEventListener('input', function () {
       if (this.value.length === 6) {
         document.getElementById('pinForm').submit();
       }
     });
   </script>
+
 </body>
 </html>`;
 
