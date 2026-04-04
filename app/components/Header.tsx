@@ -5,11 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const NAV_LINKS = [
-  { label: "Концерты", href: "#concerts" },
-  { label: "Театр",    href: "#theatre" },
-  { label: "Выставки", href: "#exhibitions" },
-  { label: "Детям",    href: "#kids" },
-  { label: "Бесплатно",href: "#free" },
+  { label: "Афиша",         href: "/" },
+  { label: "Организаторам", href: "#" },
+  { label: "Для бизнеса",   href: "#" },
+  { label: "О проекте",     href: "#" },
 ];
 
 export default function Header() {

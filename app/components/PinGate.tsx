@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-// SHA-256 хэш PIN-кода
-// Текущий PIN: 1234 → сменить через NEXT_PUBLIC_PIN_HASH при билде
+// SHA-256 хэш PIN-кода (восстановлен из старого index.html)
+// Сменить через NEXT_PUBLIC_PIN_HASH в CF Pages → Settings → Environment Variables
 const PIN_HASH =
   process.env.NEXT_PUBLIC_PIN_HASH ||
-  "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+  "6ce7bc253835f32d55515a002384bbc68c8202bafdc32ba5627c24bd11eac540";
 
 async function sha256(str: string): Promise<string> {
   const buf = await crypto.subtle.digest(
