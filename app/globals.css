@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #99CCFF;
+  --color-brand-gold: #FFC200;
+  --color-brand-teal: #31CDCF;
+  --color-brand-coral: #FF6B6B;
+  --color-brand-green: #4CAF82;
+  --color-brand-dark: #1A1A2E;
+
+  --font-inter: var(--font-inter);
+  --font-nunito: var(--font-nunito);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-nunito), system-ui, sans-serif;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-7px); }
+}
