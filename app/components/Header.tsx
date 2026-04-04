@@ -57,6 +57,14 @@ export default function Header() {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+          {/* Partnership CTA */}
+          <a
+            href="mailto:info@haifa.events?subject=Сотрудничество"
+            className="hidden sm:inline-flex items-center text-xs font-medium px-4 py-1.5 rounded-full border border-[#31CDCF]/60 text-[#31CDCF] hover:border-[#31CDCF] hover:bg-[#31CDCF]/8 transition-all whitespace-nowrap tracking-wide"
+          >
+            Сотрудничество
+          </a>
+
           {/* Language switcher */}
           <div className="hidden sm:flex items-center gap-1 text-xs font-medium">
             <button className="px-2 py-1 rounded-md bg-[#1A1A2E] text-white">HE</button>
